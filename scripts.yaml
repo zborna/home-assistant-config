@@ -1,0 +1,46 @@
+'1564904687187':
+  alias: Alarm Music
+  sequence:
+  - data_template:
+      entity_id: media_player.bedroom_speaker
+      media_content_id: http://192.168.178.61:8123/local/mp3/alarm/{{range(0,17)|
+        random}}.mp3
+      media_content_type: audio/mp3
+    service: media_player.play_media
+'1564911213703':
+  alias: Turn off Desktop PC
+  sequence:
+  - data:
+      addon: core_rpc_shutdown
+      input: desktop-pc
+    service: hassio.addon_stdin
+'1569424901038':
+  alias: Sunrise
+  sequence:
+  - data:
+      brightness_pct: '1'
+      entity_id: light.bedroom
+      rgb_color:
+      - 144
+      - 48
+      - 10
+      transition: '60'
+    service: light.turn_on
+  - data:
+      brightness_pct: '20'
+      entity_id: light.bedroom
+      rgb_color:
+      - 166
+      - 54
+      - 10
+      transition: '180'
+    service: light.turn_on
+  - data:
+      brightness_pct: '70'
+      entity_id: light.bedroom
+      rgb_color:
+      - 254
+      - 194
+      - 50
+      transition: '360'
+    service: light.turn_on

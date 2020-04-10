@@ -1,0 +1,70 @@
+all_motion_sensors:
+  name: All Motion sensors
+  entities:
+    - binary_sensor.bathroom_motion_sensor_motion
+    - binary_sensor.hall_motion_sensor_motion
+    - binary_sensor.living_room_motion_sensor
+    - binary_sensor.motion_sensor_158d000200cd4e
+    - binary_sensor.motion_sensor_158d000236b50b
+    - binary_sensor.motion_sensor_158d00023db720
+
+all_media_players:
+  name: All Media players
+  entities:
+    - media_player.all_speakers
+    - media_player.bathroom_home
+    - media_player.bedroom_speaker
+    - media_player.ht_xt2
+    - media_player.ht_xt2_2
+    - media_player.kitchen_home
+    - media_player.kodi
+    - media_player.living_room
+    - media_player.living_room_home
+    - media_player.nvidia_shield_2
+    - media_player.office
+    - media_player.salon
+
+all_light_switches:
+  name: All Light Switches
+  entities:
+    - switch.sonoff_2
+    
+living_room_lights:
+  name: Living Room Lights
+  entities:
+    - light.600194910c35_192_168_178_55
+    - light.living_room
+    - light.living_room_lamp
+    - light.sonoff
+    - light.600194ac473d_192_168_178_40
+    
+all_lights:
+  name: All Lights
+  entities:
+    - light.60019491077d_192_168_178_63
+    - light.600194910c35_192_168_178_55
+    - light.600194ac473d_192_168_178_40
+    - light.bathroom
+    - light.bedroom
+    - light.bedroom_lightstrip
+    - light.dimmable_light_1
+    - light.dimmable_light_2
+    - light.dimmable_light_3
+    - light.dimmable_light_4
+    - light.dimmer_switch_1
+    - light.hall
+    - light.hall_light_1
+    - light.hall_light_2
+    - light.kitchen_lightstrip
+    - light.living_room
+    - light.living_room_2
+    - light.living_room_lamp
+    - light.living_room_lights
+    - light.office
+    - light.office_light
+    - light.office_lights
+    - light.sonoff
+    - light.sonoff_2
+    - light.toilet
+    - light.toilet_light
+

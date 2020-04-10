@@ -1,0 +1,12 @@
+someone_home:
+  name: Home Presence
+  initial: off
+  icon: mdi:home
+guest_mode:
+  name: Guest Mode
+  initial: off
+  icon: mdi:account
+sleep_mode:
+  name: Sleep Mode
+  initial: off
+  icon: mdi:sleep

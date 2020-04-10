@@ -1,0 +1,133 @@
+- id: '1553612930631'
+  alias: TV Mode on
+  trigger:
+  - above: '30'
+    entity_id: sensor.sonoff_energy_power_2
+    for: 0:00:30
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.tv_mode
+    service: homeassistant.turn_on
+  - data:
+      brightness: 220
+      color_name: blue
+      entity_id: light.600194910c35_192_168_178_55,light.600194ac473d_192_168_178_40
+    service: light.turn_on
+- id: '1553612967497'
+  alias: TV Mode off
+  trigger:
+  - below: '5'
+    entity_id: sensor.sonoff_energy_power_2
+    for: 0:02:00
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.tv_mode
+    service: input_boolean.turn_off
+  - data:
+      entity_id: light.600194910c35_192_168_178_55,light.600194ac473d_192_168_178_40
+    service: light.turn_off
+- id: '1553613858528'
+  alias: Soundbar TV Mode On
+  trigger:
+  - entity_id: input_boolean.tv_mode
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.ht_xt2
+    service: media_player.turn_on
+  - delay: 0:00:05
+  - data:
+      entity_id: media_player.ht_xt2
+      source: TV
+    service: media_player.select_source
+  - delay: 0:00:05
+  - data:
+      entity_id: media_player.ht_xt2
+      volume_level: 0.3
+    service: media_player.volume_set
+- id: '1553613959066'
+  alias: Soundbar TV Mode off
+  trigger:
+  - entity_id: input_boolean.tv_mode
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: media_player.ht_xt2_2
+    state: 'off'
+  action:
+  - data:
+      entity_id: media_player.ht_xt2
+      volume_level: 0.2
+    service: media_player.volume_set
+  - delay: 0:00:10
+  - data:
+      entity_id: media_player.ht_xt2
+    service: media_player.turn_off
+
+- id: '1556643910804'
+  alias: TV on and soundbar on
+  trigger:
+  - entity_id: input_boolean.tv_mode
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: media_player.ht_xt2
+    state: 'on'
+  action:
+  - data:
+      entity_id: media_player.ht_xt2
+      source: TV
+    service: media_player.select_source
+  - data:
+      entity_id: media_player.ht_xt2
+      volume_level: 0.3
+    service: media_player.volume_set
+- id: '1556644246916'
+  alias: Lower the volume if TV was on before
+  trigger:
+  - entity_id: media_player.ht_xt2_2
+    platform: state
+    to: playing
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.ht_xt2
+      volume_level: 0.2
+    service: media_player.volume_set
+- id: '1556644810529'
+  alias: Spotify is playing and TV is on
+  trigger:
+  - entity_id: media_player.ht_xt2_2
+    platform: state
+    to: playing
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv_mode
+    state: 'on'
+  action:
+  - data:
+      entity_id: switch.tv_toshiba
+    service: switch.turn_off
+- id: '1556645116586'
+  alias: 'Soundbar idle for 1 hour '
+  trigger:
+  - entity_id: media_player.ht_xt2_2
+    for: 01:00:00
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv_mode
+    state: 'off'
+  action:
+  - data:
+      entity_id: media_player.ht_xt2
+    service: media_player.turn_off

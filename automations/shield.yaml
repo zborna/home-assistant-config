@@ -1,0 +1,74 @@
+- id: '1556641902739'
+  alias: Youtube on
+  trigger:
+  - entity_id: sensor.shield_app
+    platform: state
+    to: com.google.android.youtube.tv
+  condition: []
+  action:
+  - data:
+      brightness: 220
+      color_name: red
+      entity_id: light.600194910c35_192_168_178_55,light.600194ac473d_192_168_178_40
+    service: light.turn_on
+- id: '1556642984840'
+  alias: Shield Home
+  trigger:
+  - entity_id: sensor.shield_app
+    platform: state
+    to: com.google.android.tvlauncher
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv_mode
+    state: 'off'
+  action:
+  - data:
+      brightness: 220
+      color_name: blue
+      entity_id: light.600194910c35_192_168_178_55
+    service: light.turn_on
+  - data:
+      entity_id: automation.tv_on_and_soundbar_on
+    service: automation.trigger
+  - data: {}
+    entity_id: input_boolean.tv_mode
+    service: input_boolean.turn_on
+- id: '1556643058989'
+  alias: Plex on
+  trigger:
+  - entity_id: sensor.shield_app
+    platform: state
+    to: com.plexapp.android
+  condition: []
+  action:
+  - data:
+      brightness: 220
+      color_name: orange
+      entity_id: light.600194910c35_192_168_178_55
+    service: light.turn_on
+- id: '1556643249752'
+  alias: Netflix On
+  trigger:
+  - entity_id: sensor.shield_app
+    platform: state
+    to: com.netflix.ninja
+  condition: []
+  action:
+  - data:
+      brightness: 220
+      color_name: purple
+      entity_id: light.600194910c35_192_168_178_55,light.600194ac473d_192_168_178_40
+    service: light.turn_on
+- id: '1556643299772'
+  alias: Kodi on
+  trigger:
+  - entity_id: sensor.shield_app
+    platform: state
+    to: org.xbmc.kodi
+  condition: []
+  action:
+  - data:
+      brightness: 220
+      color_name: green
+      entity_id: light.600194910c35_192_168_178_55
+    service: light.turn_on

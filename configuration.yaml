@@ -1,0 +1,271 @@
+homeassistant:
+  packages:
+      alarm_1: !include alarm_1.yaml
+      alarm_2: !include alarm_2.yaml
+#      gmusic_player: !include gmusic_player.yaml
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret home_lat
+  longitude: !secret home_lon
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 18
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: !secret home_time_zone
+  # Customization file
+  customize: !include customize.yaml
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named ./themes
+
+mobile_app:
+
+# Show the introduction message on startup.
+# introduction:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+
+
+logbook:
+  exclude:
+    domains:
+      - sun
+      - group
+      - light
+
+
+
+# Redirect output to Synology NAS Maria DB
+recorder:
+  db_url: !secret db_path
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+
+group: !include groups.yaml
+automation: !include automations.yaml
+automation split: !include_dir_merge_list ./automations
+script: !include scripts.yaml
+
+media_player:
+  - platform: kodi
+    host: !secret androidtv_ip
+  - platform: songpal
+    name: soundbar
+    endpoint: !secret soundbar_ip
+  - platform: spotify
+    name: Spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_client_secret
+  - platform: androidtv
+    host: !secret androidtv_ip
+    name: "NVidia Shield"
+    adb_server_ip: 127.0.0.1
+    adb_server_port: 5037
+
+device_tracker:
+  - platform: fritz
+    host: !secret fritz_ip
+    interval_seconds: 10
+    consider_home: 180
+    track_new_devices: false
+  - platform: google_maps
+    username: !secret google_maps_username
+
+#  - platform: huesensor
+  
+switch:
+  - platform: broadlink
+    host: !secret broadlink_ip
+    mac: !secret broadlink_mac
+    type: rm2_pro_plus
+    timeout: 15
+    switches:
+      tv_toshiba:
+        friendly_name: "TV"
+        command_on: 'JgAYAB0eOR4dHh0dHB8cOzkeHTodHjkfHAANBQ=='
+        command_off: 'JgAYAB0eOR4dHh0dHB8cOzkeHTodHjkfHAANBQ=='
+  - platform: flux
+    lights:
+      - light.bedroom
+      - light.toilet
+
+netatmo:
+  client_id: !secret netatmo_client_id
+  client_secret: !secret netatmo_client_secret
+
+      
+input_boolean: !include_dir_merge_named ./entities/input_booleans
+    
+wemo:
+
+binary_sensor:
+  - platform: huesensor
+  - platform: workday
+    country: !secret home_country_code
+    excludes: [sat, sun, holiday]
+    add_holidays: 
+      - '2019-05-08'
+
+sensor:
+  - platform: huesensor
+  - platform: template
+    sensors:
+      living_room_light_level:
+        friendly_name: 'Living room light level'
+        value_template: '{{state_attr("binary_sensor.living_room_motion_sensor", "lx")}}'
+        unit_of_measurement: lux
+      hall_light_level:
+        friendly_name: 'Hall light level'
+        value_template: '{{state_attr("binary_sensor.hall_motion_motion_sensor", "lx")}}'
+        unit_of_measurement: lux
+      bathroom_light_level:
+        friendly_name: 'Bathroom light level'
+        value_template: '{{state_attr("binary_sensor.bathroom_motion_motion_sensor", "lx")}}'
+        unit_of_measurement: lux
+      shield_app:
+        friendly_name: 'NVidia Shield App id'
+        value_template: '{{state_attr("media_player.nvidia_shield_2","app_id")}}'
+  - platform: netatmo
+    areas:
+      - lat_ne: !secret netatmo_lat_ne
+        lon_ne: !secret netatmo_lon_ne
+        lat_sw: !secret netatmo_lat_sw
+        lon_sw: !secret netatmo_lon_sw
+  - platform: yr
+  - platform: waqi
+    token: !secret waqi_token
+    locations:
+      - !secret home_city
+  - platform: airvisual
+    api_key: !secret airvisual_api_key
+    monitored_conditions:
+      - us
+    scan_interval: 300
+    city: !secret home_city
+    state: !secret home_state
+    country: !secret home_country
+  - platform: history_stats
+    name: TV ON this week
+    entity_id: input_boolean.tv_mode
+    state: 'on'
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+  - platform: history_stats
+    name: Play time
+    entity_id: group.all_media_players
+    state: 'playing'
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+  - platform: history_stats
+    name: Home
+    entity_id: !secret phone_entity_id
+    state: 'home'
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+  - platform: history_stats
+    name: Work
+    entity_id: person.pavel
+    state: 'Work'
+    type: time
+    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+    end: '{{ now() }}'
+  - platform: untappd
+    username: !secret untappd_username
+    id: !secret untappd_id
+    secret: !secret untappd_secret
+  - platform: delijn
+    api_key: !secret delijn_api_key
+    next_departure:
+    - stop_id: !secret delijn_stop_id_1
+    - stop_id: !secret delijn_stop_id_2
+
+
+weather:
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    
+light:
+  - platform: flux_led
+    automatic_add: true
+  - platform: switch
+    name: Kitchen lightstrip
+    entity_id: switch.wemo_switch_kitchen
+  - platform: switch
+    name: Living Room Lamp
+    entity_id: switch.sonoff_4
+  - platform: group
+    name: Living Room Lights
+    entities:
+      - light.600194910c35_192_168_178_55
+      - light.living_room
+      - light.living_room_lamp
+      - light.sonoff_2
+      - light.600194ac473d_192_168_178_40
+  - platform: group
+    name: Office Lights
+    entities:
+      - light.office_light
+      - light.60019491077d_192_168_178_63
+    
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.178.58
+    token: !secret xiaomi_miio_token
+
+air_quality:
+  - platform: opensensemap
+    station_id: !secret air_quality_station_id
+
+
+zone:
+  - name: Work
+    latitude: !secret work_lat
+    longitude: !secret work_lon
+    icon: mdi:worker
+    radius: 500
+  - name: Airport
+    latitude: !secret airport_lat
+    longitude: !secret airport_lon
+    radius: 2000
+    icon: mdi:airport
+    
+
+config_check:
+
+breaking_changes:
+
+  
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret
+  
+spotcast:
+  username: !secret spotcast_username
+  password: !secret spotcast_password
+  
+gpodder:
+  username: !secret  gpodder_username
+  password: !secret gpodder_password
+  sensor:
+    - enabled: true
+      name: Hassio
+      device: 01
+
+fritzbox_tools:
+  host: !secret fritz_ip
+  username: !secret fritzbox_tools_username
+  password: !secret fritzbox_tools_password
+  
+media_extractor:

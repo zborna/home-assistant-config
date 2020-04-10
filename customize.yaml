@@ -1,0 +1,12 @@
+switch.sonoff:
+  friendly_name: Sonoff POW TV
+switch.sonoff_2:
+  friendly_name: Living Room Lamp
+light.600194910c35_192_168_178_55:
+  friendly_name: TV Led strip
+light.sonoff:
+  friendly_name: Sonoff b1 Living Room
+light.600194ac473d_192_168_178_40:
+  friendly_name: Living room heating light
+light.60019491077d_192_168_178_63:
+  friendly_name: office lightstrip
