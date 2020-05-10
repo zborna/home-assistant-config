@@ -1,0 +1,28 @@
+- platform: history_stats
+  name: TV ON this week
+  entity_id: input_boolean.tv_mode
+  state: 'on'
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'
+- platform: history_stats
+  name: Play time
+  entity_id: group.all_media_players
+  state: 'playing'
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'
+- platform: history_stats
+  name: Home
+  entity_id: !secret phone_entity_id
+  state: 'home'
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'
+- platform: history_stats
+  name: Work
+  entity_id: person.pavel
+  state: 'Work'
+  type: time
+  start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
+  end: '{{ now() }}'
