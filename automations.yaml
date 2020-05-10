@@ -1,96 +1,3 @@
-- id: '1553620345935'
-  alias: Lamp on Switch click
-  trigger:
-  - event_data:
-      event: 1002
-      id: table_switch_living_room
-    event_type: deconz_event
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: light.living_room_lamp
-    service: light.toggle
-- id: '1553620450759'
-  alias: Block Living toom light automation
-  trigger:
-  - event_data:
-      event: 1003
-      id: table_switch_living_room
-    event_type: deconz_event
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.block_livingroom_light_automation
-    service: input_boolean.toggle
-- id: '1553621398253'
-  alias: Sleep Mode
-  trigger:
-  - entity_id: binary_sensor.openclose_5
-    for: 0:05
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.sleep_mode
-    state: 'off'
-  - after: sunset
-    condition: sun
-  action:
-  - data:
-      entity_id: input_boolean.sleep_mode
-    service: input_boolean.turn_on
-
-
-- id: '1556645288258'
-  alias: Resert vaccum daily run
-  trigger:
-  - at: 0:00
-    platform: time
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.hoover_daily_run
-    service: input_boolean.turn_off
-- id: '1556645396731'
-  alias: Vaccum on state
-  trigger:
-  - entity_id: vacuum.xiaomi_vacuum_cleaner
-    platform: state
-    to: cleaning
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.hoover_daily_run
-    service: input_boolean.turn_on
-- id: '1556646378658'
-  alias: vaccum on guest mode
-  trigger:
-  - entity_id: group.all_motion_sensors
-    for: '2:00:00'
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.hoover_daily_run
-    state: 'off'
-  - condition: state
-    entity_id: person.pavel
-    state: not_home
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'on'
-  - condition: state
-    entity_id: input_boolean.sleep_mode
-    state: 'off'
-  - after: sunrise
-    before: sunset
-    condition: sun
-  action:
-  - data:
-      entity_id: vacuum.xiaomi_vacuum_cleaner
-    service: vacuum.start
 - id: '1556646739377'
   alias: Guests out
   trigger:
@@ -159,53 +66,6 @@
   - data:
       entity_id: media_player.bedroom_speaker
     service: media_player.turn_off
-- id: '1556820749082'
-  alias: Alarm 1 ring
-  trigger:
-  - event_data: {}
-    event_type: alarm_1_event
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: script.1569424901038
-    service: script.turn_on
-  - delay: 0:05
-  - data:
-      entity_id: media_player.bedroom_speaker
-      volume_level: 0.3
-    service: media_player.volume_set
-  - data:
-      entity_id: script.1564904687187
-    service: script.turn_on
-  - data:
-      entity_id: input_boolean.alarm_ringin
-    service: input_boolean.turn_on
-- id: '1556820797346'
-  alias: Alarm 2 ring
-  trigger:
-  - event_data: {}
-    event_type: alarm_2_event
-    platform: event
-  condition: []
-  action:
-  - data:
-      entity_id: script.1569424901038
-    service: script.turn_on
-  - delay: 0:05
-  - data:
-      entity_id: media_player.bedroom_speaker
-      volume_level: 0.3
-    service: media_player.volume_set
-  - data:
-      entity_id: script.1564904687187
-    service: script.turn_on
-  - data:
-      entity_id: input_boolean.sleep_mode
-    service: input_boolean.turn_off
-  - data:
-      entity_id: input_boolean.alarm_ringin
-    service: input_boolean.turn_on
 - id: '1557153903699'
   alias: Kitchen light toogle
   trigger:
@@ -232,89 +92,6 @@
     condition: sun
   action:
   - service: openuv.update_data
-- id: '1557825738080'
-  alias: Nobody at home
-  trigger:
-  - entity_id: device_tracker.honor_10_be40d24b54e09325
-    from: home
-    platform: state
-  - entity_id: device_tracker.camis_iphone
-    from: home
-    platform: state
-  condition:
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'off'
-  - condition: state
-    entity_id: device_tracker.camis_iphone
-    state: not_home
-  - condition: state
-    entity_id: device_tracker.honor_10_be40d24b54e09325
-    state: not_home
-  action:
-  - data:
-      entity_id: input_boolean.someone_home
-    service: input_boolean.turn_off
-- id: '1557825775423'
-  alias: Someone at Home
-  trigger:
-  - entity_id: device_tracker.honor_10_be40d24b54e09325
-    platform: state
-    to: home
-  - entity_id: device_tracker.camis_iphone
-    platform: state
-    to: home
-  condition:
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'off'
-  action:
-  - data:
-      entity_id: input_boolean.someone_home
-    service: input_boolean.turn_on
-  - data:
-      entity_id: input_boolean.holidays
-    service: input_boolean.turn_off
-- id: '1562519608386'
-  alias: Living room lights automatically off
-  trigger:
-  - entity_id: binary_sensor.living_room_motion_sensor
-    for: 0:10
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.tv_mode
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.block_livingroom_light_automation
-    state: 'off'
-  - condition: state
-    entity_id: media_player.living_room
-    state: 'off'
-  - after: '22:00'
-    condition: time
-  action:
-  - data:
-      entity_id: light.600194910c35_192_168_178_55,light.living_room,light.living_room_lamp,light.sonoff,light.600194ac473d_192_168_178_40
-    service: light.turn_off
-- id: '1564342736128'
-  alias: Nobody home vacumum
-  trigger:
-  - entity_id: input_boolean.someone_home
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: 'off'
-  - condition: state
-    entity_id: input_boolean.hoover_daily_run
-    state: 'off'
-  action:
-  - data:
-      entity_id: vacuum.xiaomi_vacuum_cleaner
-    service: vacuum.start
 - id: '1564389340336'
   alias: Bedroom light On
   trigger:
@@ -379,16 +156,6 @@
   - data:
       entity_id: input_boolean.toilet_door_status
     service: input_boolean.turn_off
-- alias: Power state on HA start-up
-  trigger:
-    platform: homeassistant
-    event: start
-  action:
-  - service: mqtt.publish
-    data:
-      topic: sonoffs/cmnd/state
-      payload: ''
-  id: f748830bc5df4cc28afe90fbdd3e7f2c
 - id: '1564923714067'
   alias: Bath mode
   trigger:
@@ -418,21 +185,6 @@
   - data:
       entity_id: light.wemo_switch_kitchen
     service: light.turn_on
-- id: '1564924254940'
-  alias: No motion in Kitchen
-  trigger:
-  - entity_id: binary_sensor.presence_7
-    for: 0:05
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.block_kitchen_light_automation
-    state: 'off'
-  action:
-  - data:
-      entity_id: light.wemo_switch_kitchen
-    service: light.turn_off
 - id: '1565164881095'
   alias: Bathroom Lights Off
   trigger:
@@ -489,18 +241,6 @@
   - data:
       entity_id: input_boolean.bath_mode
     service: input_boolean.turn_off
-- id: '1566458775722'
-  alias: Holiday Mode
-  trigger:
-  - entity_id: device_tracker.honor_10_be40d24b54e09325
-    for: '24:00'
-    platform: state
-    to: not_home
-  condition: []
-  action:
-  - data:
-      entity_id: input_boolean.holidays
-    service: input_boolean.turn_on
 - id: '1568306099034'
   alias: Bath mode off light off
   trigger:
@@ -545,30 +285,49 @@
       media_content_type: video/youtube
     entity_id: media_player.bedroom_speaker
     service: media_extractor.play_media
-- id: '1580669376240'
-  alias: Living room light toogle
+- id: '1588190193079'
+  alias: Alarm ringing for 15 min
   description: ''
   trigger:
-  - event_data:
-      event: 1004
-      id: table_switch_living_room
-    event_type: deconz_event
-    platform: event
+  - entity_id: input_boolean.alarm_ringin
+    for: 00:05
+    platform: state
+    to: 'on'
   condition: []
   action:
-  - entity_id: light.living_room
-    service: light.toggle
-- id: '1586532177167'
-  alias: On HA Boot
+  - data:
+      volume_level: 0.4
+    entity_id: media_player.bathroom_home
+    service: media_player.volume_set
+  - data: {}
+    entity_id: script.1564904687188
+    service: script.turn_on
+- id: '1589113405092'
+  alias: On Start Alarms
   description: ''
   trigger:
   - event: start
     platform: homeassistant
-  condition:
-  - condition: state
-    entity_id: device_tracker.honor_10_be40d24b54e09325
-    state: home
+  condition: []
   action:
   - data: {}
-    entity_id: input_boolean.someone_home
+    entity_id: input_boolean.alarm_2_weekend
     service: input_boolean.turn_on
+  - data: {}
+    entity_id: input_boolean.alarm_1_weekday
+    service: input_boolean.turn_on
+  - data:
+      value: 6
+    entity_id: input_number.alarm_1_hour
+    service: input_number.set_value
+  - data:
+      value: 30
+    entity_id: input_number.alarm_1_minutes
+    service: input_number.set_value
+  - data:
+      value: 7
+    entity_id: input_number.alarm_2_hour
+    service: input_number.set_value
+  - data:
+      value: 30
+    service: input_number.set_value

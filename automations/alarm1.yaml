@@ -1,12 +1,12 @@
-- id: alarm_2_weekdays
-  alias: "Wake me up (week) 2"
+- id: alarm_1_weekdays
+  alias: "Wake me up (week) 1"
   trigger:
     - platform: time_pattern
       minutes: '/1'
       seconds: 0
   condition:
     - condition: state
-      entity_id: input_boolean.alarm_2_weekday
+      entity_id: input_boolean.alarm_1_weekday
       state: 'on'
     - condition: time
       weekday:
@@ -17,22 +17,22 @@
         - fri
     - condition: template
       value_template: >-
-            {{ now().strftime("%H:%M") == states.sensor.alarm_2_time.state }}
+            {{ now().strftime("%H:%M") == states.sensor.alarm_1_time.state }}
   action:
-    - event: alarm_2_event
+    - event: alarm_1_event
       event_data:
-        name: Alarm 2 Triggered
+        name: Alarm 1 Triggered
         type: Weekdays
 
-- id: alarm_2_weekend
-  alias: "Wake me up (weekend) 2"
+- id: alarm_1_weekend
+  alias: "Wake me up (weekend) 1"
   trigger:
     - platform: time_pattern
       minutes: '/1'
       seconds: 0
   condition:
   - condition: state
-    entity_id: input_boolean.alarm_2_weekend
+    entity_id: input_boolean.alarm_1_weekend
     state: 'on'
   - condition: time
     weekday:
@@ -40,18 +40,18 @@
       - sun
   - condition: template
     value_template: >-
-      {{ now().strftime("%H:%M") == states.sensor.alarm_2_time.state }}
+      {{ now().strftime("%H:%M") == states.sensor.alarm_1_time.state }}
 
   action:
-    - event: alarm_2_event
+    - event: alarm_1_event
       event_data:
-        name: Alarm 2 Triggered
+        name: Alarm 1 Triggered
         type: Weekends
-- id: '1556820797346'
-  alias: Alarm 2 ring
+- id: '1556820749082'
+  alias: Alarm 1 ring
   trigger:
   - event_data: {}
-    event_type: alarm_2_event
+    event_type: alarm_1_event
     platform: event
   condition: []
   action:
@@ -66,9 +66,6 @@
   - data:
       entity_id: script.1564904687187
     service: script.turn_on
-  - data:
-      entity_id: input_boolean.sleep_mode
-    service: input_boolean.turn_off
   - data:
       entity_id: input_boolean.alarm_ringin
     service: input_boolean.turn_on

@@ -1,7 +1,7 @@
 homeassistant:
-  packages:
-      alarm_1: !include alarm_1.yaml
-      alarm_2: !include alarm_2.yaml
+#  packages:
+#      alarm_1: !include alarm_1.yaml
+#      alarm_2: !include alarm_2.yaml
 #      gmusic_player: !include gmusic_player.yaml
   # Name of the location where Home Assistant is running
   name: Home
@@ -103,7 +103,9 @@ netatmo:
   client_secret: !secret netatmo_client_secret
 
       
-input_boolean: !include_dir_merge_named ./entities/input_booleans
+#input_boolean: !include_dir_merge_named ./entities/input_booleans
+#input_number: !include_dir_merge_named ./entities/input_numbers
+
     
 wemo:
 
@@ -117,23 +119,6 @@ binary_sensor:
 
 sensor:
   - platform: huesensor
-  - platform: template
-    sensors:
-      living_room_light_level:
-        friendly_name: 'Living room light level'
-        value_template: '{{state_attr("binary_sensor.living_room_motion_sensor", "lx")}}'
-        unit_of_measurement: lux
-      hall_light_level:
-        friendly_name: 'Hall light level'
-        value_template: '{{state_attr("binary_sensor.hall_motion_motion_sensor", "lx")}}'
-        unit_of_measurement: lux
-      bathroom_light_level:
-        friendly_name: 'Bathroom light level'
-        value_template: '{{state_attr("binary_sensor.bathroom_motion_motion_sensor", "lx")}}'
-        unit_of_measurement: lux
-      shield_app:
-        friendly_name: 'NVidia Shield App id'
-        value_template: '{{state_attr("media_player.nvidia_shield_2","app_id")}}'
   - platform: netatmo
     areas:
       - lat_ne: !secret netatmo_lat_ne
@@ -153,34 +138,6 @@ sensor:
     city: !secret home_city
     state: !secret home_state
     country: !secret home_country
-  - platform: history_stats
-    name: TV ON this week
-    entity_id: input_boolean.tv_mode
-    state: 'on'
-    type: time
-    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-    end: '{{ now() }}'
-  - platform: history_stats
-    name: Play time
-    entity_id: group.all_media_players
-    state: 'playing'
-    type: time
-    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-    end: '{{ now() }}'
-  - platform: history_stats
-    name: Home
-    entity_id: !secret phone_entity_id
-    state: 'home'
-    type: time
-    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-    end: '{{ now() }}'
-  - platform: history_stats
-    name: Work
-    entity_id: person.pavel
-    state: 'Work'
-    type: time
-    start: '{{ as_timestamp( now().replace(hour=0).replace(minute=0).replace(second=0) ) - now().weekday() * 86400 }}'
-    end: '{{ now() }}'
   - platform: untappd
     username: !secret untappd_username
     id: !secret untappd_id
@@ -191,6 +148,7 @@ sensor:
     - stop_id: !secret delijn_stop_id_1
     - stop_id: !secret delijn_stop_id_2
 
+sensor split: !include_dir_merge_list ./entities/sensors
 
 weather:
   - platform: darksky
@@ -218,7 +176,14 @@ light:
     entities:
       - light.office_light
       - light.60019491077d_192_168_178_63
-    
+  - platform: group
+    name: Kitchen Lights
+    entities:
+      - light.color_temperature_light_1
+      - light.color_temperature_light_2
+      - light.color_temperature_light_3
+      - light.color_temperature_light_4
+
 vacuum:
   - platform: xiaomi_miio
     host: 192.168.178.58
@@ -251,9 +216,9 @@ google:
   client_id: !secret google_client_id
   client_secret: !secret google_client_secret
   
-spotcast:
-  username: !secret spotcast_username
-  password: !secret spotcast_password
+#spotcast:
+  #username: !secret spotcast_username
+  #password: !secret spotcast_password
   
 gpodder:
   username: !secret  gpodder_username

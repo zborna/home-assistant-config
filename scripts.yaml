@@ -44,3 +44,24 @@
       - 50
       transition: '360'
     service: light.turn_on
+'1564904687188':
+  alias: Alarm Music back-up
+  sequence:
+  - data_template:
+      entity_id: media_player.bathroom_home
+      media_content_id: http://192.168.178.61:8123/local/mp3/alarm/{{range(0,20)|
+        random}}.mp3
+      media_content_type: audio/mp3
+    service: media_player.play_media
+'1589123963152':
+  alias: vacuum Kitchen
+  sequence:
+  - data:
+      repeats: 2
+      zone:
+      - - 21880
+        - 24000
+        - 20400
+        - 28000
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    service: xiaomi_miio.vacuum_clean_zone

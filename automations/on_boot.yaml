@@ -1,0 +1,24 @@
+- id: '1586532177167'
+  alias: On HA Boot
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition:
+  - condition: state
+    entity_id: device_tracker.honor_10_be40d24b54e09325
+    state: home
+  action:
+  - data: {}
+    entity_id: input_boolean.someone_home
+    service: input_boolean.turn_on
+- alias: Power state on HA start-up
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+  - service: mqtt.publish
+    data:
+      topic: sonoffs/cmnd/state
+      payload: ''
+  id: f748830bc5df4cc28afe90fbdd3e7f2c

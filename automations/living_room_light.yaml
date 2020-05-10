@@ -1,0 +1,62 @@
+- id: '1580669376240'
+  alias: Living room light toogle
+  description: ''
+  trigger:
+  - event_data:
+      event: 1004
+      id: table_switch_living_room
+    event_type: deconz_event
+    platform: event
+  condition: []
+  action:
+  - entity_id: light.living_room
+    service: light.toggle
+- id: '1553620345935'
+  alias: Lamp on Switch click
+  trigger:
+  - event_data:
+      event: 1002
+      id: table_switch_living_room
+    event_type: deconz_event
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: light.living_room_lamp
+    service: light.toggle
+- id: '1553620450759'
+  alias: Block Living toom light automation
+  trigger:
+  - event_data:
+      event: 1003
+      id: table_switch_living_room
+    event_type: deconz_event
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.block_livingroom_light_automation
+    service: input_boolean.toggle
+- id: '1562519608386'
+  alias: Living room lights automatically off
+  trigger:
+  - entity_id: binary_sensor.living_room_motion_sensor
+    for: 0:10
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.tv_mode
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.block_livingroom_light_automation
+    state: 'off'
+  - condition: state
+    entity_id: media_player.living_room
+    state: 'off'
+  - after: '22:00'
+    condition: time
+  action:
+  - data:
+      entity_id: light.600194910c35_192_168_178_55,light.living_room,light.living_room_lamp,light.sonoff,light.600194ac473d_192_168_178_40
+    service: light.turn_off

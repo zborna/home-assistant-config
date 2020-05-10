@@ -1,0 +1,83 @@
+- id: '1556645288258'
+  alias: Resert vaccum daily run
+  trigger:
+  - at: 0:00
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.hoover_daily_run
+    service: input_boolean.turn_off
+- id: '1556645396731'
+  alias: Vaccum on state
+  trigger:
+  - entity_id: vacuum.xiaomi_vacuum_cleaner
+    platform: state
+    to: cleaning
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.hoover_daily_run
+    service: input_boolean.turn_on
+- id: '1556646378658'
+  alias: vaccum on guest mode
+  trigger:
+  - entity_id: group.all_motion_sensors
+    for: '2:00:00'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.hoover_daily_run
+    state: 'off'
+  - condition: state
+    entity_id: person.pavel
+    state: not_home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.sleep_mode
+    state: 'off'
+  - after: sunrise
+    before: sunset
+    condition: sun
+  action:
+  - data:
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    service: vacuum.start
+- id: '1564342736128'
+  alias: Nobody home vacumum
+  trigger:
+  - entity_id: input_boolean.someone_home
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.hoover_daily_run
+    state: 'off'
+  action:
+  - data:
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    service: vacuum.start
+- id: '1588189708686'
+  alias: Daily hoover
+  description: ''
+  trigger:
+  - at: '13:30'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: input_boolean.hoover_daily_run
+    state: 'off'
+  action:
+  - data: {}
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    service: vacuum.start
+  - data:
+      fan_speed: Silent
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    service: vacuum.set_fan_speed

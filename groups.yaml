@@ -68,3 +68,22 @@ all_lights:
     - light.toilet
     - light.toilet_light
 
+alarm_1:
+  name: Wake Me Up 1
+  icon: mdi:alarm
+  entities:
+    - sensor.alarm_1_time
+    - input_number.alarm_1_hour
+    - input_number.alarm_1_minutes
+    - input_boolean.alarm_1_weekday
+    - input_boolean.alarm_1_weekend
+
+alarm_2:
+  name: Wake Me Up 2
+  icon: mdi:alarm
+  entities:
+    - sensor.alarm_2_time
+    - input_number.alarm_2_hour
+    - input_number.alarm_2_minutes
+    - input_boolean.alarm_2_weekday
+    - input_boolean.alarm_2_weekend

@@ -1,0 +1,72 @@
+- id: '1553621398253'
+  alias: Sleep Mode
+  trigger:
+  - entity_id: binary_sensor.openclose_5
+    for: 0:05
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.sleep_mode
+    state: 'off'
+  - after: sunset
+    condition: sun
+  action:
+  - data:
+      entity_id: input_boolean.sleep_mode
+    service: input_boolean.turn_on
+- id: '1557825738080'
+  alias: Nobody at home
+  trigger:
+  - entity_id: device_tracker.honor_10_be40d24b54e09325
+    from: home
+    platform: state
+  - entity_id: device_tracker.camis_iphone
+    from: home
+    platform: state
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  - condition: state
+    entity_id: device_tracker.camis_iphone
+    state: not_home
+  - condition: state
+    entity_id: device_tracker.honor_10_be40d24b54e09325
+    state: not_home
+  action:
+  - data:
+      entity_id: input_boolean.someone_home
+    service: input_boolean.turn_off
+- id: '1557825775423'
+  alias: Someone at Home
+  trigger:
+  - entity_id: device_tracker.honor_10_be40d24b54e09325
+    platform: state
+    to: home
+  - entity_id: device_tracker.camis_iphone
+    platform: state
+    to: home
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  action:
+  - data:
+      entity_id: input_boolean.someone_home
+    service: input_boolean.turn_on
+  - data:
+      entity_id: input_boolean.holidays
+    service: input_boolean.turn_off
+- id: '1566458775722'
+  alias: Holiday Mode
+  trigger:
+  - entity_id: device_tracker.honor_10_be40d24b54e09325
+    for: '24:00'
+    platform: state
+    to: not_home
+  condition: []
+  action:
+  - data:
+      entity_id: input_boolean.holidays
+    service: input_boolean.turn_on
